@@ -14,7 +14,7 @@ export class GreenhouseManager {
   private sensorSimulator: SensorSimulator;
   private simulationInterval: NodeJS.Timeout | null = null;
   private environmentData: EnvironmentData[] = [];
-  private timeStep: number = 100;  // zu Testzwecken 10 oder 1 statt 100 
+  private timeStep: number = 1000;  // zu Testzwecken 10 oder 1 statt 100 
 
   constructor() {
   }
