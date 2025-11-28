@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gewächshaus Steuerung - Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🌱 Gewächshaus Steuerung</h1>
+            <div class="header-info">
+                <div class="simulation-controls">
+                    <label>Geschwindigkeit:</label>
+                    <select id="speed-selector" onchange="changeSimulationSpeed(this.value)">
+                        <option value="1" selected>1x</option>
+                        <option value="10">10x</option>
+                        <option value="100">100x</option>
+                    </select>
+                </div>
+                <div class="environment-info">
+                    <span id="sim-day">Tag: -</span>
+                    <span id="sim-time">Zeit: -</span>
+                    <span id="outside-temp">Außen: -</span>
+                </div>
+                <span id="connection-status" class="status-badge disconnected">Getrennt</span>
+            </div>
+        </header>
+
+        <main>
+            <!-- Dashboard Overview -->
+            <section class="dashboard-overview">
+                <div class="stats-card">
+                    <h3>Gewächshäuser</h3>
+                    <div class="stat-value" id="total-greenhouses">4</div>
+                </div>
+                <div class="stats-card">
+                    <h3>Tische</h3>
+                    <div class="stat-value" id="total-tables">32</div>
+                </div>
+                <div class="stats-card">
+                    <h3>Gesamt Pflanzen</h3>
+                    <div class="stat-value" id="total-plants">-</div>
+                </div>
+                <div class="stats-card">
+                    <h3>Ø Pflanzengröße</h3>
+                    <div class="stat-value" id="avg-plant-size">-</div>
+                </div>
+            </section>
+
+            <!-- Greenhouses Grid -->
+            <section class="greenhouses-section">
+                <h2>Gewächshäuser</h2>
+                <div class="greenhouses-grid" id="greenhouses-grid">
+                    <!-- Greenhouses will be inserted here dynamically -->
+                </div>
+            </section>
+
+            <!-- Selected Greenhouse Details -->
+            <section class="details-section" id="details-section" style="display: none;">
+                <div class="details-header">
+                    <h2 id="details-title">Gewächshaus 1</h2>
+                    <button class="btn-close" onclick="closeDetails()">✕</button>
+                </div>
+
+                <!-- Greenhouse Controls -->
+                <div class="greenhouse-controls">
+                    <div class="control-group">
+                        <label>Belüftung (Fan)</label>
+                        <button class="btn-toggle" id="fan-toggle" onclick="toggleFan()">
+                            <span class="toggle-state">AUS</span>
+                        </button>
+                    </div>
+                    <div class="control-group">
+                        <label>Abschattung (%)</label>
+                        <input type="range" id="shading-slider" min="0" max="100" value="0" 
+                               oninput="updateShading(this.value)">
+                        <span id="shading-value">0%</span>
+                    </div>
+                </div>
+
+                <!-- Greenhouse Sensors -->
+                <div class="sensor-readings">
+                    <div class="sensor-card">
+                        <div class="sensor-icon">🌡️</div>
+                        <div class="sensor-info">
+                            <div class="sensor-label">Temperatur</div>
+                            <div class="sensor-value" id="gh-temp">-</div>
+                        </div>
+                    </div>
+                    <div class="sensor-card">
+                        <div class="sensor-icon">💧</div>
+                        <div class="sensor-info">
+                            <div class="sensor-label">Luftfeuchtigkeit</div>
+                            <div class="sensor-value" id="gh-humidity">-</div>
+                        </div>
+                    </div>
+                    <div class="sensor-card">
+                        <div class="sensor-icon">💡</div>
+                        <div class="sensor-info">
+                            <div class="sensor-label">Lichtintensität</div>
+                            <div class="sensor-value" id="gh-light">-</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tables Grid -->
+                <h3>Tische</h3>
+                <div class="tables-grid" id="tables-grid">
+                    <!-- Tables will be inserted here dynamically -->
+                </div>
+            </section>
+
+            <!-- Table Details Modal -->
+            <div class="modal" id="table-modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 id="table-modal-title">Tisch Details</h3>
+                        <button class="btn-close" onclick="closeTableModal()">✕</button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Table Info -->
+                        <div class="table-info-grid">
+                            <div class="info-item">
+                                <span class="info-label">Position:</span>
+                                <span class="info-value" id="table-position">-</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Pflanzenanzahl:</span>
+                                <span class="info-value" id="table-plant-count">-</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Pflanzengröße:</span>
+                                <span class="info-value" id="table-plant-size">-</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Temperatur:</span>
+                                <span class="info-value" id="table-temp">-</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Bodenfeuchtigkeit:</span>
+                                <span class="info-value" id="table-moisture">-</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Bodenfruchtbarkeit:</span>
+                                <span class="info-value" id="table-fertility">-</span>
+                            </div>
+                        </div>
+
+                        <!-- Table Controls -->
+                        <div class="table-controls">
+                            <div class="control-row">
+                                <label>💧 Bewässerung</label>
+                                <button class="btn-toggle" id="water-toggle" onclick="toggleWater()">
+                                    <span class="toggle-state">AUS</span>
+                                </button>
+                            </div>
+                            <div class="control-row">
+                                <label>🌿 Dünger</label>
+                                <button class="btn-toggle" id="fertilizer-toggle" onclick="toggleFertilizer()">
+                                    <span class="toggle-state">AUS</span>
+                                </button>
+                            </div>
+                            <div class="control-row">
+                                <label>💡 Kunstlicht (Lumen)</label>
+                                <div class="slider-group">
+                                    <input type="range" id="artlight-slider" min="0" max="2000" step="100" value="0" 
+                                           oninput="updateArtLight(this.value)">
+                                    <span id="artlight-value">0 lx</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Harvest Status -->
+                        <div class="harvest-status" id="harvest-status">
+                            <div class="status-icon">📦</div>
+                            <div class="status-text">
+                                <strong>Bereit zum Versand?</strong>
+                                <p id="harvest-message">Prüfe Bedingungen...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

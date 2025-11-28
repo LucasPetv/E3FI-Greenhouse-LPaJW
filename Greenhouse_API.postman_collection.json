@@ -1,0 +1,246 @@
+{
+  "info": {
+    "name": "Greenhouse Simulation API",
+    "description": "API Endpoints für die Gewächshaus-Simulation",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Greenhouses",
+      "item": [
+        {
+          "name": "Get All Greenhouses",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/api/greenhouses",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "greenhouses"]
+            }
+          }
+        },
+        {
+          "name": "Get Greenhouse Sensors",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/api/greenhouses/1/sensors",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "greenhouses", "1", "sensors"]
+            }
+          }
+        },
+        {
+          "name": "Control Fan",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"state\": true\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/greenhouses/1/fan",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "greenhouses", "1", "fan"]
+            }
+          }
+        },
+        {
+          "name": "Control Shading",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"percentage\": 50\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/greenhouses/1/shading",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "greenhouses", "1", "shading"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Tables",
+      "item": [
+        {
+          "name": "Get Table Data",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/api/tables/1/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "tables", "1", "1"]
+            }
+          }
+        },
+        {
+          "name": "Control Table Water",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"state\": true\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/tables/1/1/water",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "tables", "1", "1", "water"]
+            }
+          }
+        },
+        {
+          "name": "Control Table Fertilizer",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"state\": true\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/tables/1/1/fertilizer",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "tables", "1", "1", "fertilizer"]
+            }
+          }
+        },
+        {
+          "name": "Control Table Light",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"lumens\": 1000\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/tables/1/1/light",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "tables", "1", "1", "light"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Simulation",
+      "item": [
+        {
+          "name": "Get Simulation Status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/api/simulation/status",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "simulation", "status"]
+            }
+          }
+        },
+        {
+          "name": "Set Simulation Speed",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"speed\": 10\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/simulation/speed",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "simulation", "speed"]
+            }
+          }
+        },
+        {
+          "name": "Get Current Environment",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/api/environment/current",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "environment", "current"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/api/health",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "health"]
+        }
+      }
+    }
+  ]
+}
