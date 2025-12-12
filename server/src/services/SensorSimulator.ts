@@ -13,13 +13,14 @@ export class SensorSimulator {
   private minuteOfTheDay: number = 0;
 
   // Growth parameters (per minute)
-  private readonly BASE_GROWTH_RATE = 0.1;        // cm per minute under optimal conditions
+  private readonly BASE_GROWTH_RATE = 0.2        // cm per minute under optimal conditions
   private readonly OPTIMAL_TEMP = 22;              // °C optimal temperature
   private readonly DEATH_TEMP = 60;                // °C plants die above this
   private readonly OPTIMAL_MOISTURE_MIN = 50;      // % optimal soil moisture min
   private readonly OPTIMAL_MOISTURE_MAX = 80;      // % optimal soil moisture max
   private readonly MAX_HUMIDITY = 85;              // % max air humidity
-  private readonly WATER_INCREASE_RATE = 5;        // % moisture increase per minute watering
+  private readonly WATER_INCREASE_RATE = 3;        // % moisture increase per minute watering
+  private readonly EVAPORATION_RATE = 0.6;         // % moisture loss per minute (when not watering)
   private readonly FERTILIZER_RATE = 20;           // % per minute (100% after 5 minutes)
   private readonly OVER_FERTILIZER_DEATH = 10;     // minutes until death from over-fertilization
   private readonly FERTILIZER_DECAY = 1;           // % decay per minute
@@ -161,15 +162,14 @@ export class SensorSimulator {
         table.soilFertility = Math.min(150, table.soilFertility + this.FERTILIZER_RATE); // Can go over 100%
       }
     } else {
-      // Calculate evaporation: dependent on temperature and humidity
-      // Formula: Evaporation = (1/10) * (BF - LF) * (60% - rLF) / 3% per hour
-      // Converting to per minute
-      const BF = table.soilMoisture;
-      const LF = house.humidity;
-      const relHumidity = house.humidity / 100;
+      // Calculate evaporation: temperature and humidity dependent
+      // Higher temperature = more evaporation
+      // Higher humidity = less evaporation
+      const tempFactor = Math.max(0, (house.temperature - 10) / 40); // Increase with temperature
+      const humidityFactor = Math.max(0, 1 - house.humidity / 100); // Decrease with humidity
       
-      const evaporationRate = (BF - LF) * (0.6 - relHumidity) / (10 * 3 * 60); // per minute
-      table.soilMoisture = Math.max(0, table.soilMoisture - Math.abs(evaporationRate));
+      const evaporationRate = this.EVAPORATION_RATE * tempFactor * humidityFactor;
+      table.soilMoisture = Math.max(0, table.soilMoisture - evaporationRate);
     }
 
     // Fertilizer decay (1% per minute)
