@@ -7,6 +7,7 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
+import path from 'path';
 import { GreenhouseManager } from './services/GreenhouseManager';
 import { ApiRoutes } from './routes/api.routes';
 import { WebSocketService } from './services/WebSocketService';
@@ -35,33 +36,23 @@ class GreenhouseServer {
   }
 
   private setupMiddleware(): void {
-    this.app.use(helmet());
+    this.app.use(helmet({
+      contentSecurityPolicy: false, // Für WebSocket-Verbindungen
+    }));
     this.app.use(cors());
     this.app.use(morgan('combined'));
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
+    
+    // Serve static frontend files
+    const frontendPath = path.join(__dirname, '../../frontend');
+    this.app.use(express.static(frontendPath));
   }
 
   private setupRoutes(): void {
     // API routes
     const apiRoutes = new ApiRoutes(this.greenhouseManager);
     this.app.use('/api', apiRoutes.getRouter());
-    
-    // Root endpoint
-    this.app.get('/', (req, res) => {
-      res.json({
-        message: 'Greenhouse Simulation Server',
-        version: '1.0.0',
-        endpoints: {
-          greenhouses: '/api/greenhouses',
-          specific_greenhouse: '/api/greenhouses/:id/sensors',
-          specific_table: '/api/tables/:greenhouseId/:tableId',
-          health: '/api/health',
-          websocket: `ws://localhost:${this.wsPort}`
-        },
-        timestamp: new Date().toISOString()
-      });
-    });
   }
 
   private setupWebSocket(): void {
@@ -103,6 +94,8 @@ class GreenhouseServer {
       console.log(`   GET  /api/greenhouses/:id/sensors`);
       console.log(`   GET  /api/tables/:greenhouseId/:tableId`);
       console.log(`   GET  /api/health`);
+      console.log('🌐 Frontend:');
+      console.log(`   ➡️  Open http://localhost:${this.port} in your browser`);
       console.log('🔄 Simulation running every 30 seconds');
       console.log('🚀 ==========================================');
     });
